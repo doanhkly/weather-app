@@ -11,9 +11,8 @@ const Weather = () => {
     const [inputValue, setInputValue] = useState('')
     const [searchValue, setSearchValue] = useState('seattle')
 
-    
     const { data, error } = useFetchWeather(
-        './netlify/functions/getWeather',
+        '/.netlify/functions/getWeather',
         searchValue      
     )
 
@@ -33,14 +32,20 @@ const Weather = () => {
                 </Form.Group>          
                 {error && <p color='darkred'>Please enter a valid city name (e.g. Seattle)</p>}      
             </Form>  
-            <Row className='align-items-center border rounded w-50'>
-                <Col className='d-flex flex-column align-items-center'>
-                    <h1 className='text-bold mt-3'>{data.temp} °F</h1>
-                    <Image className='align-self-center' src='https://dummyimage.com/120/000/ffffff&text=image+not+available' alt='weather-icon' />
-                    <h5>{data.weather[0].main}</h5>
-                    <h1 className='my-5'>{data.city}, {data.country}</h1>
-                </Col>
-            </Row>        
+            <React.Fragment>
+                { data !== null ? ( 
+                <Row className='align-items-center border rounded w-50'>
+                    <Col className='d-flex flex-column align-items-center'>
+                        <h1 className='text-bold mt-3'>{data.temp} °F</h1>
+                        <Image className='align-self-center' src='https://dummyimage.com/120/000/ffffff&text=image+not+available' alt='weather-icon' />
+                        <h5>{data.weather[0].main}</h5>
+                        <h1 className='my-5'>{data.city}, {data.country}</h1>
+                    </Col>
+                </Row> 
+                ) : null }
+          
+            </React.Fragment>
+            
         </Container>
     )
 }

@@ -2,30 +2,37 @@ import { useState, useEffect } from 'react'
 
 const axios = require('axios')
 
-export const useFetchWeather = (url, city) => {
+export const useFetchWeather = (url, cityName) => {
     const [data, setData] = useState(null)
     const [error, setError] = useState(false)
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.post(url, { data: { city: city }})
-                if (response.cod === 404) {
-                    setError(true)
-                }
-                const data = {
-                    temp: response.main.temp,
-                    city: response.name,
-                    country: response.sys.country, 
-                    weather: res.weather
-                }
-                setData(data)
-            } catch (error) {
-                setError(true)
-                console.log(error)
-            }
-
-        }
-    }, [ city ])
-    return { data, error }
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify({ city: cityName })
+          })
+            .then(r => 
+                r.json())
+            .then(res => {
+              if (res.cod === 404) {
+                setError(true);
+              }
+              console.log(res)
+              return res;
+            })
+            .then(res => {
+              const data = {
+                temp: res.main.temp.toFixed(0),
+                city: res.name,
+                country: res.sys.country,
+                weather: res.weather
+              };
+              setData(data);
+              setError(false);
+            })
+            .catch(err => {
+              setError(true);
+            });
+        }, [cityName]);
+        return { data, error };
 }
