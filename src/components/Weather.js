@@ -11,10 +11,10 @@ const Weather = () => {
     const [inputValue, setInputValue] = useState('')
     const [searchValue, setSearchValue] = useState('seattle')
 
-    const { data, error } = useFetchWeather(
+    const { data, error, loading } = useFetchWeather(
         '/.netlify/functions/getWeather',
-        searchValue      
-    )
+        searchValue
+      );
 
     return (
         <Container fluid={ true } className='d-flex align-items-center 
@@ -33,7 +33,7 @@ const Weather = () => {
                 {error && <p color='darkred'>Please enter a valid city name (e.g. Seattle)</p>}      
             </Form>  
             <React.Fragment>
-                { data !== null ? ( 
+                { (!loading && data) ? ( 
                 <Row className='align-items-center border rounded w-50'>
                     <Col className='d-flex flex-column align-items-center'>
                         <h1 className='text-bold mt-3'>{data.temp} °F</h1>
