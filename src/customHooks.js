@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const axios = require('axios')
 
 export const useFetchWeather = (url, city) => {
   const [data, setData] = useState(null);
@@ -7,36 +8,27 @@ export const useFetchWeather = (url, city) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({ city: city })
-    })
-    .then(r => r.json())
-    //.then(r => console.log(r))
-    .then(res => {
-      if (res.cod === 404) {
+    async function fetchData() {
+      try {
+        const res = await axios.post(url, { city: city })
+        const data = res.data
+        //console.log(res.data)
+        const arr = {
+          temp: data.main.temp.toFixed(0),
+          city: data.name,
+          country: data.sys.country,
+          weather: data.weather
+        }
+        setData(arr)
+        setError(false)
+        setLoading(false)
+      } catch (err) {
+        //console.log(err)
         setError(true);
         setLoading(false);
-      }
-      return res;
-    })
-    .then(res => {
-      const data = {
-        temp: res.main.temp.toFixed(0),
-        city: res.name,
-        country: res.sys.country,
-        weather: res.weather
-      };
-      setData(data);
-      setLoading(false);
-      setError(false);
-      return data;
-    })
-    .then(r => console.log(r))
-    .catch(err => {
-      setError(true);
-      setLoading(false);
-    });
+      } 
+    }
+    fetchData();
   }, [city]);
   return { data, error, loading };
 };
