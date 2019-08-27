@@ -5,6 +5,6 @@ module.exports = function(app) {
     target: 'http://localhost:9000/',
     "pathRewrite": {
       "^/\\.netlify/functions": ""
-    }
+    },
   }));
 };

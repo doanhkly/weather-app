@@ -11,29 +11,32 @@ export const useFetchWeather = (url, city) => {
       method: "POST",
       body: JSON.stringify({ city: city })
     })
-      .then(r => r.json())
-      .then(res => {
-        if (res.cod === 404) {
-          setError(true);
-          setLoading(false);
-        }
-        return res;
-      })
-      .then(res => {
-        const data = {
-          temp: res.main.temp.toFixed(0),
-          city: res.name,
-          country: res.sys.country,
-          weather: res.weather
-        };
-        setData(data);
-        setLoading(false);
-        setError(false);
-      })
-      .catch(err => {
+    .then(r => r.json())
+    //.then(r => console.log(r))
+    .then(res => {
+      if (res.cod === 404) {
         setError(true);
         setLoading(false);
-      });
+      }
+      return res;
+    })
+    .then(res => {
+      const data = {
+        temp: res.main.temp.toFixed(0),
+        city: res.name,
+        country: res.sys.country,
+        weather: res.weather
+      };
+      setData(data);
+      setLoading(false);
+      setError(false);
+      return data;
+    })
+    .then(r => console.log(r))
+    .catch(err => {
+      setError(true);
+      setLoading(false);
+    });
   }, [city]);
   return { data, error, loading };
 };
